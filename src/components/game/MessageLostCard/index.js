@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-import './MessageLostCard.css'
+import './MessageLostCard.module.css'
 import { emitLostCardSelected } from '@/utils/socket';
 
 const MessageLostCard = () => {

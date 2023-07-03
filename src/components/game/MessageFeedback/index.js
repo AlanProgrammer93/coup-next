@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import './Message.css'
+import './MessageFeedback.module.css'
 
 const MessageFeedback = ({msg, setError}) => {
     useEffect(() => {

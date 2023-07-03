@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import styles from '../styles/Home.module.css'
 
-import { emitGetGames, emitOpenGame, init } from '@/utils/socket'
+import { emitDeleteGame, emitGetGames, emitJoinGame, emitOpenGame, init } from '@/utils/socket'
 import Instructions from '@/components/common/Instructions'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -39,13 +39,13 @@ export default function Start() {
     const idGame = Math.floor(Math.random() * 100000000);
     setMyGame(idGame);
     localStorage.setItem('currentGame', idGame)
-    emitOpenGame(user.username, idGame);
+    emitOpenGame(user.user.username, idGame);
   }
 
   const endGame = () => {
-    /* localStorage.removeItem('currentGame')
-    emitDeleteGame(user.username, myGame)
-    setMyGame(''); */
+    localStorage.removeItem('currentGame')
+    emitDeleteGame(user.user.username, myGame)
+    setMyGame(''); 
   }
 
   const startGame = (idGame) => {
@@ -53,10 +53,10 @@ export default function Start() {
   }
 
   const joinGame = (idGame) => {
-    /* emitJoinGame(user.username, idGame);
+    emitJoinGame(user.user.username, idGame);
     setMyGame(localStorage.setItem('currentGame', idGame));
     localStorage.setItem('state', 'playing')
-    history(`/${idGame}`) */
+    router.push(`/${idGame}`);
   }
 
   return (

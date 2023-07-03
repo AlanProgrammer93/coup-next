@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-import './MessageAttackedGlobal.css'
+import styles from '../../../styles/Home.module.css'
+
 import { emitAllow, emitBlockAttackGlobal, emitBlockCard, emitLostCard, emitLostGame } from '@/utils/socket';
 import { updateAttackerGlobal } from '@/store/attackerGlobalReducer';
 
@@ -75,7 +76,7 @@ const MessageAttackedGlobal = () => {
     }
 
     return (
-        <div className="attackedGlobal">
+        <div className={styles.attackedGlobal}>
             <span>Permitir en {time}</span>
             {`${attackerGlobal.attackedBy} esta usando ${attackerGlobal.card}`}
             <div style={{ display: 'flex' }}>

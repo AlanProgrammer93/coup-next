@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-import './SelectOponent.css'
+import './SelectOponent.module.css'
 import { emitLostGame, emitUseCard } from '@/utils/socket';
 
 const SelectOponent = ({ gamers, card, setCardSelected, setError }) => {

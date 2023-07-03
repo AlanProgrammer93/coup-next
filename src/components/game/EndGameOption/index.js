@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 
-import './EndGameOption.css';
+import styles from '../../../styles/Home.module.css'
+
 import { emitLostGame } from '@/utils/socket';
 import MessageFeedback from '../MessageFeedback';
 
@@ -22,7 +23,7 @@ const EndGameOption = () => {
         {error && <MessageFeedback msg={error} setError={setError} />}
         <div
             onClick={endGame}
-            className="endGameOption"
+            className={styles.endGameOption}
         >
             X
         </div>

@@ -1,24 +1,29 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-import data from '../../cards.json';
+import data from '../../../cards.json'
 
-import './Controls.css'
+import styles from './Controls.module.css'
+
 import { emitAllow, emitBlockCard, emitLostCard, emitLostGame, emitTakeMoney, emitUseCard, emitUseCardGlobal } from '@/utils/socket';
 import MessageFeedback from '../MessageFeedback';
 import SelectOponent from '../SelectOponent';
 import MessageActions from '../MessageActions';
+import { updateAction } from '@/store/actionsReducer';
+import { updateTurnGame } from '@/store/gameReducer';
 
 const Controls = () => {
     const { user, game, attacker, action } = useSelector((state) => ({ ...state }));
     const dispatch = useDispatch()
+
+    console.log("user: ", user, "game: ", game, "attacker: ", attacker, "action: ", action);
 
     const [showMenu, setShowMenu] = useState(false)
     const [error, setError] = useState('')
     const [cardSelected, setCardSelected] = useState('')
 
     const takeMoney = () => {
-        if (game.turn !== user.username || game.state === 'initial') {
+        if (game.game.turn !== user.user.username || game.game.state === 'initial') {
             setError('No es tu turno')
             return
         }
@@ -27,57 +32,56 @@ const Controls = () => {
     }
 
     const playCard = (card) => {
-        if (game.state === 'initial') {
+        if (game.game.state === 'initial') {
             setError('No es tu turno')
             return
         }
-        if (game.gamer.length === 1) {
+        if (game.game.gamer.length === 1) {
             switch (card) {
                 case 'capitan':
-                    game.turn = 'next'
-                    emitUseCard('capitan', game.idGame, game.gamer[0].user, user.username)
-                    dispatch({
-                        type: 'SET_ACTION',
-                        payload: {
-                            msg: `Atacaste a ${game.gamer[0].user} con el Capitan`
-                        }
-                    });
-                    break;
+                    console.log("game donde hayu error: ", game.game.turn);
+                    //game.game.turn = 'next'
+                    dispatch(updateTurnGame(game.game.gamer[0].user));
+
+                    emitUseCard('capitan', game.game.idGame, game.game.gamer[0].user, user.user.username)
+                    
+                    dispatch(updateAction({ msg: `Atacaste a ${game.game.gamer[0].user} con el Capitan` }));
+                break;
 
                 case 'asesina':
-                    if (game.myUser.money.length > 2) {
-                        game.turn = 'next'
-                        emitUseCard('asesina', game.idGame, game.gamer[0].user, user.username)
+                    if (game.game.myUser.money.length > 2) {
+                        game.game.turn = 'next'
+                        emitUseCard('asesina', game.game.idGame, game.game.gamer[0].user, user.user.username)
                         dispatch({
                             type: 'SET_ACTION',
                             payload: {
-                                msg: `Atacaste a ${game.gamer[0].user} con la Asesina`
+                                msg: `Atacaste a ${game.game.gamer[0].user} con la Asesina`
                             }
                         });
                         return
                     }
                     setError('No tienes suficiente monedas.')
-                    break;
+                break;
 
                 case 'coup':
-                    if (game.myUser.money.length > 6) {
-                        game.turn = 'next'
-                        if (game.gamer[0].cards.length === 1) {
-                            emitLostGame(game.idGame, game.gamer[0].user)
+                    if (game.game.myUser.money.length > 6) {
+                        game.game.turn = 'next'
+                        if (game.game.gamer[0].cards.length === 1) {
+                            emitLostGame(game.game.idGame, game.game.gamer[0].user)
                             return
                         }
-                        emitUseCard('coup', game.idGame, game.gamer[0].user, user.username)
+                        emitUseCard('coup', game.game.idGame, game.game.gamer[0].user, user.username)
                         dispatch({
                             type: 'SET_ACTION',
                             payload: {
-                                msg: `Atacaste a ${game.gamer[0].user} con COUP`
+                                msg: `Atacaste a ${game.game.gamer[0].user} con COUP`
                             }
                         });
                         return
                     } else {
                         setError('No tienes suficiente monedas.')
                     }
-                    break;
+                break;
 
                 default:
                     break;
@@ -88,40 +92,40 @@ const Controls = () => {
     }
 
     const playCardGlobal = (card) => {
-        if (game.state === 'initial') {
+        if (game.game.state === 'initial') {
             setError('No es tu turno')
             return
         }
         switch (card) {
             case 'embajador':
-                game.turn = 'next'
-                emitUseCardGlobal('embajador', game.idGame, user.username)
+                game.game.turn = 'next'
+                emitUseCardGlobal('embajador', game.game.idGame, user.username)
                 dispatch({
                     type: 'SET_ACTION',
                     payload: {
                         msg: 'Usaste el Embajador'
                     }
                 });
-                break;
+            break;
 
             case 'duque':
-                game.turn = 'next'
-                emitUseCardGlobal('duque', game.idGame, user.username)
+                game.game.turn = 'next'
+                emitUseCardGlobal('duque', game.game.idGame, user.username)
                 dispatch({
                     type: 'SET_ACTION',
                     payload: {
                         msg: 'Usaste el Duque'
                     }
                 });
-                break;
+            break;
 
             default:
-                break;
+            break;
         }
     }
 
     const blockCard = (card) => {
-        emitBlockCard(card, game.idGame, attacker.attackedBy, user.username)
+        emitBlockCard(card, game.game.idGame, attacker.attackedBy, user.user.username)
         dispatch({
             type: 'SET_ATTACKER',
             payload: null
@@ -141,8 +145,8 @@ const Controls = () => {
                 payload: null
             });
 
-            if (game.myUser.cards.length === 1) {
-                emitLostGame(game.idGame, user.username)
+            if (game.game.myUser.cards.length === 1) {
+                emitLostGame(game.game.idGame, user.user.username)
                 return
             }
 
@@ -155,7 +159,7 @@ const Controls = () => {
             return
         }
 
-        emitAllow(game.idGame, user.username, attacker.attackedBy, attacker.card)
+        emitAllow(game.game.idGame, user.user.username, attacker.attackedBy, attacker.card)
         dispatch({
             type: 'SET_ATTACKER',
             payload: null
@@ -163,7 +167,7 @@ const Controls = () => {
     }
 
     const distrust = () => {
-        var userAttacker = game.gamer.filter(
+        var userAttacker = game.game.gamer.filter(
             (u) => u.user === attacker.attackedBy
         );
         var cardExist = userAttacker[0].cards.filter(
@@ -172,21 +176,21 @@ const Controls = () => {
 
         if (!cardExist[0]) {
             if (userAttacker[0].cards.length === 1) {
-                emitLostGame(game.idGame, attacker.attackedBy)
+                emitLostGame(game.game.idGame, attacker.attackedBy)
                 dispatch({
                     type: 'SET_ATTACKER',
                     payload: null
                 });
                 return
             }
-            emitLostCard(game.idGame, attacker.attackedBy)
+            emitLostCard(game.game.idGame, attacker.attackedBy)
             dispatch({
                 type: 'SET_ATTACKER',
                 payload: null
             });
         } else {
-            if (game.myUser.cards.length === 1) {
-                emitLostGame(game.idGame, user.username)
+            if (game.game.myUser.cards.length === 1) {
+                emitLostGame(game.game.idGame, user.user.username)
                 dispatch({
                     type: 'SET_ATTACKER',
                     payload: null
@@ -195,7 +199,7 @@ const Controls = () => {
             }
 
             if (attacker.card === 'asesina') {
-                emitLostGame(game.idGame, user.username)
+                emitLostGame(game.game.idGame, user.user.username)
                 dispatch({
                     type: 'SET_ATTACKER',
                     payload: null
@@ -221,28 +225,28 @@ const Controls = () => {
             {
                 cardSelected &&
                 <SelectOponent
-                    gamers={game.gamer}
+                    gamers={game.game.gamer}
                     card={cardSelected}
                     setCardSelected={setCardSelected}
                     setError={setError}
                 />
             }
             {error && <MessageFeedback msg={error} setError={setError} />}
-            {action && <MessageActions />}
-            <div className="home__controls">
-                <div className="home__controls-money">
+            {action.action && <MessageActions />}
+            <div className={styles.home__controls}>
+                <div className={styles.home__controls_money}>
                     {
-                        game && game.myUser.money.map(mon => (
-                            <div className="money"></div>
+                        game.game && game.game.myUser.money.map(mon => (
+                            <div className={styles.money}></div>
                         ))
                     }
                 </div>
-                <div className="home__controls-cards">
+                <div className={styles.home__controls_cards}>
                     {
-                        game && game.myUser.cards.map((card, index) => (
-                            <div className="home__controls-card" key={index}>
+                        game.game && game.game.myUser.cards.map((card, index) => (
+                            <div className={styles.home__controls_card} key={index}>
                                 <img src={`/cards/${card}.png`} alt="" />
-                                <div className="detail-card">
+                                <div className={styles.detail_card}>
                                     <p>{card}</p>
                                     <span>{data[card]}</span>
                                 </div>
@@ -251,15 +255,15 @@ const Controls = () => {
                     }
 
                 </div>
-                <div className="home__controls-bottons">
+                <div className={styles.home__controls_bottons}>
                     <button onClick={takeMoney}>Tomar Moneda</button>
                     <button onClick={() => setShowMenu(!showMenu)}>Jugar</button>
                 </div>
             </div>
             {
                 showMenu
-                    ? game.turn === user.username ? (
-                        <div className="optionGame">
+                    ? game.game.turn === user.user.username ? (
+                        <div className={styles.optionGame}>
                             <button onClick={() => playCard('capitan')}>Tengo el Capitan</button>
                             <button onClick={() => playCardGlobal('embajador')}>Tengo el Embajador</button>
                             <button onClick={() => playCardGlobal('duque')}>Tengo el Duque</button>
@@ -267,10 +271,10 @@ const Controls = () => {
                             <button onClick={() => playCard('coup')}>COUP</button>
                         </div>
                     ) : (
-                        <div className="optionGame">
+                        <div className={styles.optionGame}>
                             {
-                                attacker
-                                    ? attacker.card === 'capitan'
+                                attacker.attacker
+                                    ? attacker.attacker.card === 'capitan'
                                         ? (
                                             <>
                                                 <button onClick={() => blockCard('capitan')}>Tengo el Capitan</button>
@@ -279,7 +283,7 @@ const Controls = () => {
                                                 <button onClick={allow}>Permitir</button>
                                             </>
                                         )
-                                        : attacker.card === 'asesina'
+                                        : attacker.attacker.card === 'asesina'
                                             ? (
                                                 <>
                                                     <button onClick={() => blockCard('condesa')}>Tengo la Condesa</button>
@@ -287,14 +291,14 @@ const Controls = () => {
                                                     <button onClick={allow}>Permitir</button>
                                                 </>
                                             )
-                                            : attacker.card === 'duque'
+                                            : attacker.attacker.card === 'duque'
                                                 ? (
                                                     <>
                                                         <button onClick={distrust}>Desconfio</button>
                                                         <button onClick={allow}>Permitir</button>
                                                     </>
                                                 )
-                                                : attacker.card === 'embajador' && (
+                                                : attacker.attacker.card === 'embajador' && (
                                                     <>
                                                         <button >Tengo el Duque</button>
                                                         <button onClick={distrust}>Desconfio</button>

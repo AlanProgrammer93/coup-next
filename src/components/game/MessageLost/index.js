@@ -1,11 +1,11 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router'
 
-import './MessageLost.css'
+import './MessageLost.module.css'
+import { useRouter } from 'next/router'
 
 const MessageLost = () => {
-    const history = useNavigate()
+    const router = useRouter();
     const dispatch = useDispatch()
 
     const goHome = () => {
@@ -14,7 +14,7 @@ const MessageLost = () => {
             type: 'RESULT',
             payload: null
         });
-        history(`/`)
+        router.push('/');
     }
 
     return (

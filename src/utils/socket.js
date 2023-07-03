@@ -1,5 +1,10 @@
 import { updateGames } from '@/store/gamesReducer';
 import socketClient from 'socket.io-client';
+import { currentUser } from './api';
+import { updateUser } from '@/store/userReducer';
+import { updateGame } from '@/store/gameReducer';
+import { updateAction } from '@/store/actionsReducer';
+import { updateAttacker } from '@/store/attackerReducer';
 
 let socket;
 
@@ -9,12 +14,20 @@ const SERVER = 'http://localhost:5000'
 export const init = (dispatch) => {
     socket = socketClient(SERVER);
 
+    const token = localStorage.getItem('token')
+    currentUser(token)
+        .then(res => {
+            localStorage.setItem('token', res.data.token)
+            dispatch(updateUser(
+                {
+                    username: res.data.username
+                }
+            ));
+        })
+        .catch(err => console.log(err));
+
     socket.on('gameCreated', (data) => {
         dispatch(updateGames(data));
-        /* dispatch({
-            type: 'GET_GAMES',
-            payload: data
-        }); */
     });
 
     // emitGetGame
@@ -26,25 +39,23 @@ export const init = (dispatch) => {
         const otherUsers = data?.gamer.filter(
             (g) => g.connectionId !== socket.id
         );
+        
         dataGame.gamer = otherUsers
         dataGame.myUser = myUser[0]
 
-        dispatch({
-            type: 'GET_GAME',
-            payload: dataGame
-        });
-        dispatch({
-            type: 'SET_ACTION',
-            payload: null
-        });
+        dispatch(updateGame(dataGame));
+
+        dispatch(updateAction());
     });
 
     socket.on('attacked', (data) => {
-        dispatch({
+        /* dispatch({
             type: 'SET_ATTACKER',
             payload: data
-        });
+        }); */
+        dispatch(updateAttacker(data));
     });
+    
     socket.on('coup', (data) => {
         dispatch({
             type: 'SET_COUP',
@@ -101,19 +112,19 @@ export const init = (dispatch) => {
     });
 
     socket.on('actionOtherUser', (data) => {
-        dispatch({
+        /* dispatch({
             type: 'SET_ACTION',
             payload: {
                 msg: data
             }
-        });
+        }); */
+        dispatch(updateAction({ msg: data }));
     });
     
 }
 
 export const emitOpenGame = (username, idGame) => {
-
-    socket.emit('createGame', { username: "alan", idGame });
+    socket.emit('createGame', { username: username, idGame });
 }
 
 export const emitDeleteGame = (username, idGame) => {

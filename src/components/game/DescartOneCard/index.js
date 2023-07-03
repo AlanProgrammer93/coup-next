@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-import './DescartOneCard.css'
+import styles from '../../../styles/Home.module.css'
 import { emitReturnCardAmbassador } from '@/utils/socket';
 
 const DescartOneCard = () => {
@@ -26,9 +26,9 @@ const DescartOneCard = () => {
     }
 
     return (
-        <div className="descartOneCard">
+        <div className={styles.descartOneCard}>
             <h2>Descartar Una</h2>
-            <div className="descartCard">
+            <div className={styles.descartCard}>
             {
                 descart.cards.map((card, index) => (
                     <button key={index} onClick={() => returnSelected(card)}>{card}</button>

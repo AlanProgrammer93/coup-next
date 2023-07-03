@@ -11,9 +11,12 @@ export const gameSlice = createSlice({
         updateGame(state, action) {
             state.game = action.payload;
         },
+        updateTurnGame(state, action) {
+            state.game.turn = action.payload;
+        },
     },
 });
 
-export const { updateGame } = gameSlice.actions;
+export const { updateGame, updateTurnGame } = gameSlice.actions;
 
 export default gameSlice.reducer;

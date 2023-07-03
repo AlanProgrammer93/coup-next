@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import './Instructions.css';
+import styles from "../../../styles/Home.module.css";
 
 const Instructions = ({ position }) => {
     const [showInstruction, setShowInstruction] = useState(false);
@@ -8,28 +8,28 @@ const Instructions = ({ position }) => {
         <>
             <div
                 onClick={() => setShowInstruction(true)}
-                className="instruction"
+                className={styles.instruction}
                 style={{ top: position }}
             >
                 ?
             </div>
             {
                 showInstruction && (
-                    <div className="instruction_modal">
+                    <div className={styles.instruction_modal}>
                         <div
                             onClick={() => setShowInstruction(false)}
-                            className="instruction"
+                            className={styles.instruction}
                             style={{ top: position }}
                         >
                             X
                         </div>
-                        <div className="instruction_container">
+                        <div className={styles.instruction_container}>
                             <h2>Un juego de estrategia y engaño para ser el unico jugador con alguna
                                 carta en mano.</h2>
                             <br />
 
                             <h3>Inicio del juego</h3>
-                            <div className="instruction-start_game">
+                            <div className={styles.instruction_start_game}>
                                 <p>Maximo de 3 jugadores y minimo de 2.</p>
                                 <p>Cada jugador recibe 2 cartas y dos monedas.</p>
                                 <p>Los jugadores deben familiarizarse con todas las acciones
@@ -37,7 +37,7 @@ const Instructions = ({ position }) => {
                             </div>
 
                             <h3>Acciones Globales</h3>
-                            <div className="instruction-start_game">
+                            <div className={styles.instruction_start_game}>
                                 <p><b>Tomar una moneda:</b> Solo toma una moneda y pasa el turno.</p>
                                 <p><b>Usar COUP:</b> Si tienes 7 monedas puedes usar esta accion para eliminar
                                     una carta a un jugador.</p>
@@ -48,7 +48,7 @@ const Instructions = ({ position }) => {
                             </div>
 
                             <h3>Acciones de Personajes</h3>
-                            <div className="instruction-start_game">
+                            <div className={styles.instruction_start_game}>
 
                                 <b>Duque </b>
                                 <p>- Toma 3 monedas.</p>

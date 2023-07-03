@@ -17,13 +17,16 @@ import Instructions from '@/components/common/Instructions'
 import Main from '@/components/game/Main'
 import MessageLost from '@/components/game/MessageLost'
 import MessageWin from '@/components/game/MessageWin'
+import Controls from '@/components/game/Controls'
 
 const inter = Inter({ subsets: ['latin'] })
+
+import styles from '../styles/main.module.css'
+import Starting from '@/components/game/Starting'
 
 export default function Home() {
   const router = useRouter();
   const idGame = router.query.id;
-  console.log(idGame);
 
   const {
     user,
@@ -38,6 +41,9 @@ export default function Home() {
   } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch()
 
+  console.log("user: ", user);
+
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -47,11 +53,16 @@ export default function Home() {
     try {
       getSocket();
 
-      emitGetGame(idGame, user?.username);
+      if(user.user) {
+        emitGetGame(idGame, user?.user?.username);
+      }
+
     } catch (error) {
       init(dispatch)
     }
   }, [user])
+
+  console.log("game: ", game, "result: ", result);
 
   return (
     <>
@@ -63,19 +74,19 @@ export default function Home() {
       </Head>
 
       {
-        !result ? (
-          <div className="home">
+        !result.result ? (
+          <div className={styles.home} >
             {
-              game && game.state === 'initial' ? '' : game?.turn === user?.username ? (
+              game.game && game.game.state === 'initial' ? '' : game?.game?.turn === user?.user?.username ? (
                 <MessageGame msg="Tu Turno" />
               ) : (
-                <MessageGame msg={`Turno de ${game && game?.turn}`} />
+                <MessageGame msg={`Turno de ${game.game && game?.game?.turn}`} />
               )
             }
             {
-              attacker && (<MessageAttacked />)
+              attacker.attacker && (<MessageAttacked />)
             }
-            {
+            {/* {
               attackerGlobal && (<MessageAttackedGlobal />)
             }
             {
@@ -89,13 +100,13 @@ export default function Home() {
             }
             {
               descart && (<DescartOneCard />)
-            }
+            } */}
             <EndGameOption />
             <Instructions position={'350px'} />
             <Main />
             <Controls />
             {
-              game && game.state === 'initial' && (
+              game.game && game.game.state === 'initial' && (
                 <Starting />
               )
             }

@@ -1,11 +1,11 @@
 import React from 'react'
-import { useNavigate } from 'react-router'
 import { useDispatch } from 'react-redux'
 
-import './MessageWin.css'
+import './MessageWin.module.css'
+import { useRouter } from 'next/router'
 
 const MessageWin = () => {
-    const history = useNavigate()
+    const router = useRouter();
     const dispatch = useDispatch()
 
     const goHome = () => {
@@ -14,7 +14,7 @@ const MessageWin = () => {
             type: 'RESULT',
             payload: null
         });
-        history(`/`)
+        router.push('/');
     }
 
     return (

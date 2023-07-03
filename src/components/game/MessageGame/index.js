@@ -1,9 +1,9 @@
 import React from 'react'
-import './MessageGame.css';
+import styles from './MessageGame.module.css';
 
 const MessageGame = ({ msg }) => {
     return (
-        <div className="messageGame">
+        <div className={styles.messageGame}>
             { msg }
         </div>
     )

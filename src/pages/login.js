@@ -3,6 +3,8 @@ import '../styles/login.module.css';
 import styles from '@/styles/login.module.css'
 import clientAxios from '@/utils/axios';
 import { useRouter } from 'next/router';
+import { updateUser } from '@/store/userReducer';
+import { useDispatch } from 'react-redux';
 
 const login = () => {
     const [showLogin, setShowLogin] = useState(false);
@@ -12,7 +14,7 @@ const login = () => {
         confirmPassword: ''
     })
     const [error, setError] = useState('');
-    //const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const router = useRouter();
 
@@ -58,14 +60,12 @@ const login = () => {
                 .then(res => {
                     localStorage.setItem('token', res.data.token)
     
-                    /* dispatch({
-                        type: 'LOGGED_IN_USER',
-                        payload: {
+                    dispatch(updateUser(
+                        {
                             username: res.data.username
                         }
-                    }); */
-                    //history('/')
-                    console.log("LLEGO HASTA AQUI ", res);
+                    ));
+                    router.push('/');
                 })
                 .catch(err => setError("Ocurrio un problema en el servidor. Intentelo de nuevo."))
     }
@@ -89,7 +89,12 @@ const login = () => {
                     payload: {
                         username: res.data.username
                     }
-                }); */
+                });  */
+                dispatch(updateUser(
+                    {
+                        username: res.data.username
+                    }
+                ));
                 router.push('/');
             })
             .catch(err => setError("Ocurrio un problema en el servidor. Intentelo de nuevo."))

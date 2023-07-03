@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 
-import './MessageBlocked.css'
+import './MessageBlocked.module.css'
 import { emitAllowBlock, emitLostCard, emitLostGame } from '@/utils/socket';
 
 const MessageBlocked = () => {

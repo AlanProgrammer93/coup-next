@@ -81,3 +81,256 @@
         width: 80%;
     }
 }
+
+
+
+/* Intructions */
+.instruction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    /* top: 20px; */
+    right: 20px;
+    color: white;
+    position: fixed;
+    border: 1px solid deepskyblue;
+    background-color: deepskyblue;
+    border-radius: 50%;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.instruction_modal {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.instruction_container {
+    height: 90vh;
+    width: 50vw;
+    background-color: white;
+    border-radius: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    overflow-y: auto;
+    letter-spacing: 2px;
+}
+
+.instruction_container::-webkit-scrollbar {
+    display: none;
+}
+
+.instruction_container h2 {
+    margin: 10px;
+    padding: 0;
+}
+
+.instruction_container h3 {
+    margin: 0;
+    padding: 0;
+}
+
+.instruction_start_game {
+    display: flex;
+    flex-direction: column;
+}
+
+.instruction_start_game p {
+    margin: 0;
+    padding: 5px;
+}
+
+
+@media (max-width: 700px) {
+    .instruction_container {
+        width: 70vw;
+    }
+}
+
+
+/* EndGameOption */
+.descartOneCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 380px;
+    height: 180px;
+    position: absolute;
+    border: red;
+    background-color: red;
+    z-index: 9999;
+    color: white;
+    margin-top: -130px;
+    border-radius: 20px;
+    font-size: 20px;
+}
+.descartCard{
+    display: flex;
+}
+.descartCard button {
+    border: 1px solid deepskyblue;
+    background-color: deepskyblue;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 15px;
+    font-size: 18px;
+    margin-left: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+.descartCard button:hover {
+    transform: scale(1.1);
+}
+
+/* EndGameOption */
+.endGameOption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    top: 290px;
+    right: 20px;
+    color: white;
+    position: fixed;
+    border: 1px solid red;
+    background-color: red;
+    border-radius: 50%;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* MessageAttackedGlobal */
+.attackedGlobal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 350px;
+    height: 150px;
+    position: absolute;
+    border: red;
+    background-color: red;
+    z-index: 9999;
+    color: white;
+    margin-top: -130px;
+    border-radius: 20px;
+    font-size: 20px;
+}
+.attackedGlobal button {
+    border: 1px solid deepskyblue;
+    background-color: deepskyblue;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 15px;
+    margin-top: 10px;
+    font-size: 15px;
+    margin-left: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+.attackedGlobal button:hover {
+    transform: scale(1.1);
+}
+
+
+/* Main */
+.home__main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home__main_table {
+    width: 500px;
+    height: 400px;
+    background-color: burlywood;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table_mazo {
+    width: 60px;
+    height: 80px;
+    background-color: deepskyblue;
+    margin-left: 15px;
+    border-radius: 15px;
+    border-bottom: 4px solid rgb(70, 141, 165);
+    border-right: 3px solid rgb(70, 141, 165);
+}
+
+.home__main_oponent1 {
+    width: 20%;
+    margin-right: -30px;
+    z-index: 999;
+}
+
+.home__main_oponent2 {
+    width: 20%;
+    margin-left: -30px;
+    z-index: 999;
+}
+
+.home__main_oponent_card {
+    width: 170px;
+    height: 120px;
+    border: 1px solid deepskyblue;
+    margin-bottom: 10px;
+    background-color: deepskyblue;
+    border-radius: 5px;
+}
+
+.Details_oponent1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.money_aponent1 {
+    display: flex;
+}
+
+.Details_oponent2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.money_aponent2 {
+    display: flex;
+}
+
+.money {
+    width: 35px;
+    height: 35px;
+    background-color: gold;
+    border-radius: 50%;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.Details_oponent1 h2,
+.Details_oponent2 h2 {
+    color: white;
+}
