@@ -2,78 +2,61 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 
-import './MessageBlocked.module.css'
+import styles from './MessageBlocked.module.css'
 import { emitAllowBlock, emitLostCard, emitLostGame } from '@/utils/socket';
+import { updateBlocker } from '@/store/blockerReducer';
+import { updateVariables } from '@/store/variableReducer';
 
 const MessageBlocked = () => {
     const { user, game, blocker } = useSelector((state) => ({ ...state }));
     const dispatch = useDispatch()
 
     const allow = () => {
-        emitAllowBlock(game.idGame, user.username, blocker.blockedBy, blocker.card)
-        dispatch({
-            type: 'SET_BLOCKER',
-            payload: null
-        });
+        emitAllowBlock(game.game.idGame, user.user.username, blocker.blocker.blockedBy, blocker.blocker.card)
+        dispatch(updateBlocker());
     }
 
     const distrust = () => {
-        var userBlocker = game.gamer.filter(
-            (u) => u.user === blocker.blockedBy
+        var userBlocker = game.game.gamer.filter(
+            (u) => u.user === blocker.blocker.blockedBy
         );
         var cardExist = userBlocker[0].cards.filter(
-            (c) => c === blocker.card
+            (c) => c === blocker.blocker.card
         );
 
         if (!cardExist[0]) {
-            if (blocker.card === 'condesa') {
-                emitLostGame(game.idGame, blocker.blockedBy)
-                dispatch({
-                    type: 'SET_BLOCKER',
-                    payload: null
-                });
+            if (blocker.blocker.card === 'condesa') {
+                emitLostGame(game.game.idGame, blocker.blocker.blockedBy)
+                dispatch(updateBlocker());
                 return
             }
             if (userBlocker[0].cards.length === 1) {
-                emitLostGame(game.idGame, blocker.blockedBy)
-                dispatch({
-                    type: 'SET_BLOCKER',
-                    payload: null
-                });
+                emitLostGame(game.game.idGame, blocker.blocker.blockedBy)
+                dispatch(updateBlocker());
                 return
             }
             // user DEBE OBTENER OTRA CARTA
-            emitLostCard(game.idGame, blocker.blockedBy)
-            dispatch({
-                type: 'SET_BLOCKER',
-                payload: null
-            });
+            emitLostCard(game.game.idGame, blocker.blocker.blockedBy)
+            dispatch(updateBlocker());
         } else {
-            if (game.myUser.cards.length === 1) {
-                emitLostGame(game.idGame, user.username)
-                dispatch({
-                    type: 'SET_BLOCKER',
-                    payload: null
-                });
+            if (game.game.myUser.cards.length === 1) {
+                emitLostGame(game.game.idGame, user.user.username)
+                dispatch(updateBlocker());
                 return
             }
-            dispatch({
-                type: 'SET_BLOCKER',
-                payload: null
-            });
-            dispatch({
-                type: 'LOST_CARD',
-                payload: {
+            dispatch(updateBlocker());
+            dispatch(updateVariables(
+                {
                     variable: 'lostCard'
                 }
-            });
+            ));
         }
     }
 
     return (
-        <div className="blocked">
-            <p>{`${blocker.blockedBy} esta bloqueando con ${blocker.card}`}</p>
-            <div className="blocked_options">
+        <div className={styles.blocked}>
+            <p>{`${blocker.blocker.blockedBy} esta bloqueando con ${blocker.blocker.card}`}</p>
+            <div className={styles.blocked_options}>
                 <button onClick={allow}>Permitir</button>
                 <button onClick={distrust}>Desconfiar</button>
             </div>

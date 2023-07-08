@@ -1,30 +1,28 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-import './MessageLostCard.module.css'
+import styles from './MessageLostCard.module.css'
 import { emitLostCardSelected } from '@/utils/socket';
+import { updateVariables } from '@/store/variableReducer';
 
 const MessageLostCard = () => {
     const { user, game } = useSelector((state) => ({ ...state }));
     const dispatch = useDispatch()
 
     const deleteCard = (card) => {
-        emitLostCardSelected(game.idGame, user.username, card)
-        dispatch({
-            type: 'LOST_CARD',
-            payload: null
-        });
+        emitLostCardSelected(game.game.idGame, user.user.username, card)
+        dispatch(updateVariables());
     }
 
     return (
-        <div className="lostCard">
+        <div className={styles.lostCard}>
             <p>Elimina una carta</p>
-            <div className="cards">
+            <div className={styles.cards}>
                 {
-                    game && game.myUser.cards.map((card, index) => (
+                    game.game && game.game.myUser.cards.map((card, index) => (
                         <button
                             key={index}
-                            className="card"
+                            className={styles.card}
                             onClick={() => deleteCard(card)}
                         >
                             {card}

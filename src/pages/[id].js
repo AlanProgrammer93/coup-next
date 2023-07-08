@@ -37,12 +37,12 @@ export default function Home() {
     variables,
     result,
     descart,
-    coup
+    coup,
+    action
   } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch()
 
-  console.log("user: ", user);
-
+  console.log("user: ", user, "game: ", game, "attacker: ", attacker, "action: ", action, "result: ", result, "attackerGlobal: ", attackerGlobal);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -61,8 +61,6 @@ export default function Home() {
       init(dispatch)
     }
   }, [user])
-
-  console.log("game: ", game, "result: ", result);
 
   return (
     <>
@@ -86,21 +84,21 @@ export default function Home() {
             {
               attacker.attacker && (<MessageAttacked />)
             }
-            {/* {
-              attackerGlobal && (<MessageAttackedGlobal />)
+            {
+              attackerGlobal.attackerGlobal && (<MessageAttackedGlobal />)
             }
             {
-              blocker && (<MessageBlocked />)
+              blocker.blocker && (<MessageBlocked />)
             }
             {
-              variables && (<MessageLostCard />)
+              variables.variables && (<MessageLostCard />)
             }
             {
-              coup && (<MessageCoup />)
+              coup.coup && (<MessageCoup />)
             }
             {
-              descart && (<DescartOneCard />)
-            } */}
+              descart.descart && (<DescartOneCard />)
+            }  
             <EndGameOption />
             <Instructions position={'350px'} />
             <Main />
@@ -111,7 +109,7 @@ export default function Home() {
               )
             }
           </div>
-        ) : result === 'lost'
+        ) : result.result === 'lost'
           ? (<MessageLost />)
           : (<MessageWin />)
       }

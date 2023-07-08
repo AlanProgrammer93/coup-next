@@ -11,12 +11,12 @@ import SelectOponent from '../SelectOponent';
 import MessageActions from '../MessageActions';
 import { updateAction } from '@/store/actionsReducer';
 import { updateTurnGame } from '@/store/gameReducer';
+import { updateAttacker } from '@/store/attackerReducer';
+import { updateVariables } from '@/store/variableReducer';
 
 const Controls = () => {
     const { user, game, attacker, action } = useSelector((state) => ({ ...state }));
     const dispatch = useDispatch()
-
-    console.log("user: ", user, "game: ", game, "attacker: ", attacker, "action: ", action);
 
     const [showMenu, setShowMenu] = useState(false)
     const [error, setError] = useState('')
@@ -27,7 +27,7 @@ const Controls = () => {
             setError('No es tu turno')
             return
         }
-        emitTakeMoney(game.idGame, user.username)
+        emitTakeMoney(game.game.idGame, user.user.username)
         setCardSelected('')
     }
 
@@ -50,14 +50,10 @@ const Controls = () => {
 
                 case 'asesina':
                     if (game.game.myUser.money.length > 2) {
-                        game.game.turn = 'next'
+                        dispatch(updateTurnGame(game.game.gamer[0].user));
                         emitUseCard('asesina', game.game.idGame, game.game.gamer[0].user, user.user.username)
-                        dispatch({
-                            type: 'SET_ACTION',
-                            payload: {
-                                msg: `Atacaste a ${game.game.gamer[0].user} con la Asesina`
-                            }
-                        });
+                        dispatch(updateAction({ msg: `Atacaste a ${game.game.gamer[0].user} con el Capitan` }));
+                        
                         return
                     }
                     setError('No tienes suficiente monedas.')
@@ -65,18 +61,14 @@ const Controls = () => {
 
                 case 'coup':
                     if (game.game.myUser.money.length > 6) {
-                        game.game.turn = 'next'
+                        dispatch(updateTurnGame(game.game.gamer[0].user));
                         if (game.game.gamer[0].cards.length === 1) {
                             emitLostGame(game.game.idGame, game.game.gamer[0].user)
                             return
                         }
-                        emitUseCard('coup', game.game.idGame, game.game.gamer[0].user, user.username)
-                        dispatch({
-                            type: 'SET_ACTION',
-                            payload: {
-                                msg: `Atacaste a ${game.game.gamer[0].user} con COUP`
-                            }
-                        });
+                        emitUseCard('coup', game.game.idGame, game.game.gamer[0].user, user.user.username)
+                        dispatch(updateAction({ msg: `Atacaste a ${game.game.gamer[0].user} con COUP` }));
+                        
                         return
                     } else {
                         setError('No tienes suficiente monedas.')
@@ -98,25 +90,17 @@ const Controls = () => {
         }
         switch (card) {
             case 'embajador':
-                game.game.turn = 'next'
-                emitUseCardGlobal('embajador', game.game.idGame, user.username)
-                dispatch({
-                    type: 'SET_ACTION',
-                    payload: {
-                        msg: 'Usaste el Embajador'
-                    }
-                });
+                dispatch(updateTurnGame(game.game.gamer[0].user));
+                emitUseCardGlobal('embajador', game.game.idGame, user.user.username)
+                dispatch(updateAction({ msg: `Usaste el Embajador` }));
+                
             break;
 
             case 'duque':
-                game.game.turn = 'next'
-                emitUseCardGlobal('duque', game.game.idGame, user.username)
-                dispatch({
-                    type: 'SET_ACTION',
-                    payload: {
-                        msg: 'Usaste el Duque'
-                    }
-                });
+                dispatch(updateTurnGame(game.game.gamer[0].user));
+                emitUseCardGlobal('duque', game.game.idGame, user.user.username)
+                dispatch(updateAction({ msg: `Usaste el Duque` }));
+            
             break;
 
             default:
@@ -125,98 +109,71 @@ const Controls = () => {
     }
 
     const blockCard = (card) => {
-        emitBlockCard(card, game.game.idGame, attacker.attackedBy, user.user.username)
-        dispatch({
+        emitBlockCard(card, game.game.idGame, attacker.attacker.attackedBy, user.user.username)
+        dispatch(updateAttacker());
+        /* dispatch({
             type: 'SET_ATTACKER',
             payload: null
-        });
-        dispatch({
-            type: 'SET_ACTION',
-            payload: {
-                msg: `Bloqueaste a ${attacker.attackedBy} con ${card}`
-            }
-        });
+        }); */
+        dispatch(updateAction({ msg: `Bloqueaste a ${attacker.attacker.attackedBy} con ${card}` }));
     }
 
     const allow = () => {
-        if (attacker.card === 'asesina') {
-            dispatch({
-                type: 'SET_ATTACKER',
-                payload: null
-            });
-
+        if (attacker.attacker.card === 'asesina') {
+            dispatch(updateAttacker());
+            
             if (game.game.myUser.cards.length === 1) {
                 emitLostGame(game.game.idGame, user.user.username)
                 return
             }
 
-            dispatch({
-                type: 'LOST_CARD',
-                payload: {
+            dispatch(updateVariables(
+                {
                     variable: 'lostCard'
                 }
-            });
+            ));
             return
         }
 
-        emitAllow(game.game.idGame, user.user.username, attacker.attackedBy, attacker.card)
-        dispatch({
-            type: 'SET_ATTACKER',
-            payload: null
-        });
+        emitAllow(game.game.idGame, user.user.username, attacker.attacker.attackedBy, attacker.attacker.card)
+        dispatch(updateAttacker());
     }
 
     const distrust = () => {
         var userAttacker = game.game.gamer.filter(
-            (u) => u.user === attacker.attackedBy
+            (u) => u.user === attacker.attacker.attackedBy
         );
         var cardExist = userAttacker[0].cards.filter(
-            (c) => c === attacker.card
+            (c) => c === attacker.attacker.card
         );
 
         if (!cardExist[0]) {
             if (userAttacker[0].cards.length === 1) {
-                emitLostGame(game.game.idGame, attacker.attackedBy)
-                dispatch({
-                    type: 'SET_ATTACKER',
-                    payload: null
-                });
+                emitLostGame(game.game.idGame, attacker.attacker.attackedBy)
+                dispatch(updateAttacker());
                 return
             }
-            emitLostCard(game.game.idGame, attacker.attackedBy)
-            dispatch({
-                type: 'SET_ATTACKER',
-                payload: null
-            });
+            emitLostCard(game.game.idGame, attacker.attacker.attackedBy)
+            dispatch(updateAttacker());
         } else {
             if (game.game.myUser.cards.length === 1) {
                 emitLostGame(game.game.idGame, user.user.username)
-                dispatch({
-                    type: 'SET_ATTACKER',
-                    payload: null
-                });
+                dispatch(updateAttacker());
                 return
             }
 
-            if (attacker.card === 'asesina') {
+            if (attacker.attacker.card === 'asesina') {
                 emitLostGame(game.game.idGame, user.user.username)
-                dispatch({
-                    type: 'SET_ATTACKER',
-                    payload: null
-                });
+                dispatch(updateAttacker());
                 return
             }
 
-            dispatch({
-                type: 'SET_ATTACKER',
-                payload: null
-            });
-            dispatch({
-                type: 'LOST_CARD',
-                payload: {
+            dispatch(updateAttacker());
+            dispatch(updateVariables(
+                {
                     variable: 'lostCard'
                 }
-            });
+            ));
         }
     }
 

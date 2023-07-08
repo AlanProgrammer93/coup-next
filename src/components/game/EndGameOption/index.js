@@ -11,11 +11,11 @@ const EndGameOption = () => {
     const { user, game } = useSelector((state) => ({ ...state }));
 
     const endGame = () => {
-        if(game.turn !== user.username) {
+        if(game.game.turn !== user.user.username) {
             setError('No es tu turno. Puedes salir de la partida en tu turno.')
             return
         }
-        emitLostGame(game.idGame, user.username)
+        emitLostGame(game.game.idGame, user.user.username)
     }
 
     return (

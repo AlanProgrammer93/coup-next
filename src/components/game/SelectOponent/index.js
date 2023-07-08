@@ -1,8 +1,9 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-import './SelectOponent.module.css'
+import styles from './SelectOponent.module.css'
 import { emitLostGame, emitUseCard } from '@/utils/socket';
+import { updateAction } from '@/store/actionsReducer';
 
 const SelectOponent = ({ gamers, card, setCardSelected, setError }) => {
     const { user, game } = useSelector((state) => ({ ...state }));
@@ -12,45 +13,30 @@ const SelectOponent = ({ gamers, card, setCardSelected, setError }) => {
         setCardSelected('')
         switch (card) {
             case 'capitan':
-                emitUseCard('capitan', game.idGame, userSelected, user.username)
-                dispatch({
-                    type: 'SET_ACTION',
-                    payload: {
-                        msg: `Atacaste a ${userSelected} con el Capitan`
-                    }
-                });
+                emitUseCard('capitan', game.game.idGame, userSelected, user.user.username)
+                dispatch(updateAction({ msg: `Atacaste a ${userSelected} con el Capitan` }));
                 break;
 
             case 'asesina':
-                if (game.myUser.money.length > 2) {
-                    emitUseCard('asesina', game.idGame, userSelected, user.username)
-                    dispatch({
-                        type: 'SET_ACTION',
-                        payload: {
-                            msg: `Atacaste a ${userSelected} con la Asesina`
-                        }
-                    });
+                if (game.game.myUser.money.length > 2) {
+                    emitUseCard('asesina', game.game.idGame, userSelected, user.user.username)
+                    dispatch(updateAction({ msg: `Atacaste a ${userSelected} con la Asesina` }));
                     return
                 }
                 setError('No tienes suficiente monedas.')
                 break;
 
             case 'coup':
-                if (game.myUser.money.length > 6) {
-                    var attackedUser = game.gamer.filter(
+                if (game.game.myUser.money.length > 6) {
+                    var attackedUser = game.game.gamer.filter(
                         (g) => g.user === userSelected
                     );
                     if (attackedUser[0].cards.length === 1) {
-                        emitLostGame(game.idGame, userSelected)
+                        emitLostGame(game.game.idGame, userSelected)
                         return
                     }
-                    emitUseCard('coup', game.idGame, userSelected, user.username)
-                    dispatch({
-                        type: 'SET_ACTION',
-                        payload: {
-                            msg: `Atacaste a ${userSelected} con COUP`
-                        }
-                    });
+                    emitUseCard('coup', game.game.idGame, userSelected, user.user.username)
+                    dispatch(updateAction({ msg: `Atacaste a ${userSelected} con COUP` }));
                     return
                 } else {
                     setError('No tienes suficiente monedas.')
@@ -63,7 +49,7 @@ const SelectOponent = ({ gamers, card, setCardSelected, setError }) => {
     }
 
     return (
-        <div className="selectOponent">
+        <div className={styles.selectOponent}>
             <h1>Selecciona tu oponente</h1>
             <div style={{ display: 'flex' }}>
                 {

@@ -5,6 +5,12 @@ import { updateUser } from '@/store/userReducer';
 import { updateGame } from '@/store/gameReducer';
 import { updateAction } from '@/store/actionsReducer';
 import { updateAttacker } from '@/store/attackerReducer';
+import { updateCoup } from '@/store/coupReducer';
+import { updateAttackerGlobal } from '@/store/attackerGlobalReducer';
+import { updateBlocker } from '@/store/blockerReducer';
+import { updateVariables } from '@/store/variableReducer';
+import { updateDescart } from '@/store/descartCardReducer';
+import { updateResult } from '@/store/resultReducer';
 
 let socket;
 
@@ -57,67 +63,56 @@ export const init = (dispatch) => {
     });
     
     socket.on('coup', (data) => {
-        dispatch({
-            type: 'SET_COUP',
-            payload: data
-        });
+        dispatch(updateCoup(data));
     });
 
     socket.on('attackedGlobal', (data) => {
-        dispatch({
-            type: 'SET_ATTACKER_GLOBAL',
-            payload: data
-        });
+        dispatch(updateAttackerGlobal(data));
     });
 
     socket.on('blocked', (data) => {
-        dispatch({
-            type: 'SET_BLOCKER',
-            payload: data
-        });
-        dispatch({
-            type: 'SET_ACTION',
-            payload: null
-        });
+        dispatch(updateBlocker(data));
+        dispatch(updateAction());
     });
 
     socket.on('lostCard', () => {
-        dispatch({
-            type: 'LOST_CARD',
-            payload: {
+        dispatch(updateVariables(
+            {
                 variable: 'lostCard'
             }
-        });
+        ));
     });
-
+    
     socket.on('descartOneCard', (data) => {
-        dispatch({
-            type: 'DESCART_CARD',
-            payload: data
-        });
+        dispatch(updateDescart(data));
     });
 
     socket.on('lostGame', (data) => {
-        dispatch({
+        /* dispatch(updateResult(
+            {
+                payload: 'lost'
+            }
+        )); */
+
+        dispatch(updateResult('lost'));
+
+        /* dispatch({
             type: 'RESULT',
             payload: 'lost'
-        });
+        }); */
     });
 
     socket.on('win', (data) => {
-        dispatch({
-            type: 'RESULT',
-            payload: 'win'
-        });
+        /* dispatch(updateResult(
+            {
+                payload: 'win'
+            }
+        )); */
+
+        dispatch(updateResult('win'));
     });
 
     socket.on('actionOtherUser', (data) => {
-        /* dispatch({
-            type: 'SET_ACTION',
-            payload: {
-                msg: data
-            }
-        }); */
         dispatch(updateAction({ msg: data }));
     });
     

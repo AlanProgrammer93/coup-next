@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import './MessageFeedback.module.css'
+import styles from './MessageFeedback.module.css'
 
 const MessageFeedback = ({msg, setError}) => {
     useEffect(() => {
@@ -10,7 +10,7 @@ const MessageFeedback = ({msg, setError}) => {
     }, []) 
 
     return (
-        <div className="message">
+        <div className={styles.message}>
             {msg}
         </div>
     )

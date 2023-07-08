@@ -1,8 +1,9 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 
-import './MessageWin.module.css'
+import styles from './MessageWin.module.css'
 import { useRouter } from 'next/router'
+import { updateResult } from '@/store/resultReducer'
 
 const MessageWin = () => {
     const router = useRouter();
@@ -10,16 +11,14 @@ const MessageWin = () => {
 
     const goHome = () => {
         localStorage.removeItem('currentGame')
-        dispatch({
-            type: 'RESULT',
-            payload: null
-        });
+        dispatch(updateResult());
+        
         router.push('/');
     }
 
     return (
-        <div className="win">
-            <div className="container">
+        <div className={styles.win}>
+            <div className={styles.container}>
                 <h1>GANASTE EL JUEGO!</h1>
                 <button onClick={goHome}>Ir al Inicio</button>
             </div>
