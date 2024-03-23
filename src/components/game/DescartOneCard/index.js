@@ -16,7 +16,7 @@ const DescartOneCard = () => {
        
         newCards.splice( i, 1 )
         
-        dispatch(updateCardsGame());
+        //dispatch(updateCardsGame());
         
         const data = {
             idGame: game.game.idGame,
