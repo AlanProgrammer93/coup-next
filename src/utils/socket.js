@@ -15,7 +15,8 @@ import { updateResult } from '@/store/resultReducer';
 let socket;
 
 //const SERVER = 'https://coup-alan.herokuapp.com';
-const SERVER = 'http://localhost:5000'
+// const SERVER = 'http://localhost:5000'
+const SERVER = 'https://coup-server-hls8.onrender.com'
 
 export const init = (dispatch) => {
     socket = socketClient(SERVER);
