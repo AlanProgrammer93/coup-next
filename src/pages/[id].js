@@ -100,7 +100,7 @@ export default function Home() {
               descart.descart && (<DescartOneCard />)
             }  
             <EndGameOption />
-            <Instructions position={'350px'} />
+            <Instructions position={'350px'} right="20px" />
             <Main />
             <Controls />
             {

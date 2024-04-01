@@ -1,18 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-let username = null
-/* const token = localStorage.getItem('token') ? localStorage.getItem('token') : null
-if (token) {
-    currentUser(token)
-        .then(res => {
-            localStorage.setItem('token', res.data.token)
-            username = res.data.username
-        })
-        .catch(err => console.log(err));
-}   */
-
 const initialState = {
-    user: username,
+    user: "",
 };
 
 export const userSlice = createSlice({

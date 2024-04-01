@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from "../../../styles/Home.module.css";
 
-const Instructions = ({ position }) => {
+const Instructions = ({ position, right="55px" }) => {
     const [showInstruction, setShowInstruction] = useState(false);
 
     return (
@@ -9,7 +9,7 @@ const Instructions = ({ position }) => {
             <div
                 onClick={() => setShowInstruction(true)}
                 className={styles.instruction}
-                style={{ top: position }}
+                style={{ top: position, right }}
             >
                 ?
             </div>

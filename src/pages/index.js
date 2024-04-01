@@ -8,6 +8,9 @@ import styles from '../styles/Home.module.css'
 
 import { emitDeleteGame, emitGetGames, emitJoinGame, emitOpenGame, init } from '@/utils/socket'
 import Instructions from '@/components/common/Instructions'
+import clientAxios from '@/utils/axios'
+import { updateUser } from '@/store/userReducer'
+import { Logout } from '@/components/common/Logout'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,19 +24,52 @@ export default function Start() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    /* const token = localStorage.getItem('token');
+
     if (!token) {
       router.push('/login');
-    }
+    } */
+
+    getCurrentUser()
 
     init(dispatch);
     emitGetGames()
     // obtener games
     const currentGame = localStorage.getItem('currentGame');
     if (currentGame) {
-        setMyGame(currentGame);
-    }  
+      setMyGame(currentGame);
+    }
   }, [])
+
+  const getCurrentUser = async () => {
+    const token = localStorage.getItem('token') ? localStorage.getItem('token') : null
+
+    if (!token) {
+      router.push('/login');
+    }
+
+    await clientAxios.post('/auth/current-user',
+      {},
+      {
+        headers: {
+          token
+        }
+      })
+      .then(res => {
+        localStorage.setItem('token', res.data.token)
+        //dispatch(addUser(res.data.user));
+        dispatch(updateUser(
+          {
+            username: res.data.username
+          }
+        ));
+      })
+      .catch(err => {
+        localStorage.removeItem('token')
+        dispatch(updateUser(null));
+        router.push('/login');
+      });
+  }
 
   const openGame = () => {
     const idGame = Math.floor(Math.random() * 100000000);
@@ -45,7 +81,7 @@ export default function Start() {
   const endGame = () => {
     localStorage.removeItem('currentGame')
     emitDeleteGame(user.user.username, myGame)
-    setMyGame(''); 
+    setMyGame('');
   }
 
   const startGame = (idGame) => {
@@ -69,13 +105,14 @@ export default function Start() {
       </Head>
 
       <div className={styles.start}>
+        <Logout />
         <Instructions position={'20px'} />
         <button
           onClick={openGame}
           className={styles.openButton}
           disabled={myGame}
         >
-          Abrir Partida
+          Crear Nueva Partida
         </button>
         <div className={styles.start__list}>
           {

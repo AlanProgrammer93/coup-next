@@ -1,7 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-
-import './MessageCoup.module.css'
+import styles from './MessageCoup.module.css'
 import { emitLostCardSelected } from '@/utils/socket';
 import { updateCoup } from '@/store/coupReducer';
 
@@ -15,15 +14,15 @@ const MessageCoup = () => {
     }
 
     return (
-        <div className="coup">
+        <div className={styles.coup}>
             <h3>{`${coup.coup.attackedBy} esta usando COUP`}</h3>
             <p>Elimina una carta</p>
-            <div className="cards">
+            <div className={styles.cards}>
                 {
                     game.game && game.game.myUser.cards.map((card, index) => (
                         <button 
                             key={index} 
-                            className="card"
+                            className={styles.card}
                             onClick={() => deleteCard(card)}
                         >
                             {card}
