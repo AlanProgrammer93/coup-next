@@ -31,7 +31,7 @@
     height: 90vh;
     width: 50vw;
     background-color: white;
-    border-radius: 60px;
+    /* border-radius: 10px; */
     display: flex;
     flex-direction: column;
     align-items: center;

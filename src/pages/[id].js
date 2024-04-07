@@ -42,8 +42,6 @@ export default function Home() {
   } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch()
 
-  console.log("user: ", user, "game: ", game, "attacker: ", attacker, "action: ", action, "result: ", result, "attackerGlobal: ", attackerGlobal);
-
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -53,10 +51,9 @@ export default function Home() {
     try {
       getSocket();
 
-      if(user.user) {
+      if (user.user) {
         emitGetGame(idGame, user?.user?.username);
       }
-
     } catch (error) {
       init(dispatch)
     }
@@ -98,9 +95,13 @@ export default function Home() {
             }
             {
               descart.descart && (<DescartOneCard />)
-            }  
-            <EndGameOption />
-            <Instructions position={'350px'} right="20px" />
+            }
+            <div>
+              <EndGameOption />
+              <Instructions position={'350px'} right="20px" />
+            </div>
+            {/* <EndGameOption />
+            <Instructions position={'350px'} right="20px" /> */}
             <Main />
             <Controls />
             {

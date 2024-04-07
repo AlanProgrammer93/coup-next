@@ -120,7 +120,7 @@
     height: 90vh;
     width: 50vw;
     background-color: white;
-    border-radius: 60px;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -231,6 +231,7 @@
     margin-top: -130px;
     border-radius: 20px;
     font-size: 20px;
+    text-align: center;
 }
 .attackedGlobal button {
     border: 1px solid deepskyblue;
@@ -318,6 +319,7 @@
     position: absolute;
     top: 0;
     right: 0;
+    padding: 10px;
 }
 
 .money_aponent2 {
