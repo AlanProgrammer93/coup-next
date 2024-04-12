@@ -19,7 +19,7 @@ const Instructions = ({ position, right="55px" }) => {
                         <div
                             onClick={() => setShowInstruction(false)}
                             className={styles.instruction}
-                            style={{ top: position }}
+                            style={{ top: position, right }}
                         >
                             X
                         </div>
