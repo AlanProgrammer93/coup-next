@@ -9,7 +9,6 @@ export const actionSlice = createSlice({
     initialState,
     reducers: {
         updateAction(state, action) {
-            console.log("lo que se guarda en actinoSlice: ", action.payload);
             state.action = action.payload;
         },
     },

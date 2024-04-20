@@ -39,8 +39,6 @@ const Controls = () => {
         if (game.game.gamer.length === 1) {
             switch (card) {
                 case 'capitan':
-                    console.log("game donde hayu error: ", game.game.turn);
-                    //game.game.turn = 'next'
                     dispatch(updateTurnGame(game.game.gamer[0].user));
 
                     emitUseCard('capitan', game.game.idGame, game.game.gamer[0].user, user.user.username)

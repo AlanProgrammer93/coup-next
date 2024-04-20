@@ -9,7 +9,6 @@ export const gamesSlice = createSlice({
     initialState,
     reducers: {
         updateGames(state, action) {
-            console.log("Set Games ", action.payload);
             state.games = action.payload;
         },
     },

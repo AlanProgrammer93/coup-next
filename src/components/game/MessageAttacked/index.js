@@ -5,7 +5,7 @@ import styles from './MessageAttacked.module.css'
 
 const MessageAttacked = () => {
     const { attacker } = useSelector((state) => ({ ...state }));
-    console.log(attacker);
+   
     return (
         <div className={styles.attacked}>
           {`${attacker.attacker.attackedBy} esta usando ${attacker.attacker.card}`}
