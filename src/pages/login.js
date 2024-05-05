@@ -5,8 +5,10 @@ import clientAxios from '@/utils/axios';
 import { useRouter } from 'next/router';
 import { updateUser } from '@/store/userReducer';
 import { useDispatch } from 'react-redux';
+import Loading from '@/components/common/Loading';
 
 const login = () => {
+    const [loading, setLoading] = useState(false)
     const [showLogin, setShowLogin] = useState(false);
     const [authState, setAuthState] = useState({
         username: '',
@@ -34,6 +36,7 @@ const login = () => {
 
     const register = (e) => {
         e.preventDefault();
+        setLoading(true)
         if (!username || !password || !confirmPassword) {
             setError('Todos los campos son requeridos')
             return
@@ -68,10 +71,14 @@ const login = () => {
                     router.push('/');
                 })
                 .catch(err => setError("Ocurrio un problema en el servidor. Intentelo de nuevo."))
+                .finally(e => {
+                    setLoading(false)
+                })
     }
 
     const login = (e) => {
         e.preventDefault();
+        setLoading(true)
         if (!username || !password) {
             setError('Todos los campos son requeridos')
             return
@@ -98,13 +105,16 @@ const login = () => {
                 router.push('/');
             })
             .catch(err => setError("Ocurrio un problema en el servidor. Intentelo de nuevo."))
+            .finally(e => {
+                setLoading(false)
+            })
     }
 
     return (
         <div className={`${styles.Auth} ${showLogin && styles.active}`}>
-            {/* {
-                error && <MessageError msg={error} setError={setError} />
-            } */}
+            {
+                loading && <Loading />
+            }
             <div className={styles.container}>
                 <div className={styles.blueBg}>
                     <div className={`${styles.box} ${styles.signin}`}>
