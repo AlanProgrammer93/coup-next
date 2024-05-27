@@ -15,7 +15,6 @@ const login = () => {
         password: '',
         confirmPassword: ''
     })
-    const [error, setError] = useState('');
     const dispatch = useDispatch();
 
     const router = useRouter();
@@ -38,21 +37,25 @@ const login = () => {
         e.preventDefault();
         setLoading(true)
         if (!username || !password || !confirmPassword) {
-            setError('Todos los campos son requeridos')
+            alert('Todos los campos son requeridos')
+            setLoading(false)
             return
         }
 
         if (username.length < 4) {
-            setError('El usuario debe tener al menos 4 caracteres')
+            alert('El usuario debe tener al menos 4 caracteres')
+            setLoading(false)
             return
         }
        
         if (password.length < 6) {
-            setError('La contraseña debe tener al menos 6 caracteres')
+            alert('La contraseña debe tener al menos 6 caracteres')
+            setLoading(false)
             return
         }
         if (password !== confirmPassword) {
-            setError('Las contraseñas no coinciden')
+            alert('Las contraseñas no coinciden')
+            setLoading(false)
             return
         }
 
@@ -70,7 +73,7 @@ const login = () => {
                     ));
                     router.push('/');
                 })
-                .catch(err => setError("Ocurrio un problema en el servidor. Intentelo de nuevo."))
+                .catch(err => alert("Ocurrio un problema en el servidor. Intentelo de nuevo."))
                 .finally(e => {
                     setLoading(false)
                 })
@@ -80,7 +83,8 @@ const login = () => {
         e.preventDefault();
         setLoading(true)
         if (!username || !password) {
-            setError('Todos los campos son requeridos')
+            alert('Todos los campos son requeridos')
+            setLoading(false)
             return
         }
         
@@ -90,13 +94,6 @@ const login = () => {
         })
             .then(res => {
                 localStorage.setItem('token', res.data.token)
-
-                /* dispatch({
-                    type: 'LOGGED_IN_USER',
-                    payload: {
-                        username: res.data.username
-                    }
-                });  */
                 dispatch(updateUser(
                     {
                         username: res.data.username
@@ -104,7 +101,7 @@ const login = () => {
                 ));
                 router.push('/');
             })
-            .catch(err => setError("Ocurrio un problema en el servidor. Intentelo de nuevo."))
+            .catch(err => alert("Usuario o contraseña incorrecta."))
             .finally(e => {
                 setLoading(false)
             })
